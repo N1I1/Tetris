@@ -13,8 +13,13 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Tetris")
 clock = pygame.time.Clock()
 
+INITIAL_TIMER_INTERVAL = 600
+TIMER_DECREASE_RATE = 1
+
+timer_interval = INITIAL_TIMER_INTERVAL
+
 GAME_UPDATE = pygame.USEREVENT + 1
-pygame.time.set_timer(GAME_UPDATE, 200)
+pygame.time.set_timer(GAME_UPDATE, timer_interval)
 
 game = Game()
 running = True
@@ -33,6 +38,8 @@ while running:
             if event.key == pygame.K_UP:
                 game.rotate()
         if event.type == GAME_UPDATE:
+            timer_interval = max(timer_interval - TIMER_DECREASE_RATE, 300)
+            pygame.time.set_timer(GAME_UPDATE, timer_interval)
             game.move_down()
     if game.game_over:
         running = False
